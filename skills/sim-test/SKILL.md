@@ -14,7 +14,7 @@ Treat arguments as optional scope (target flows, routes, modules, environments, 
 
 ## Canonical Surface
 
-- Prefer the `e2e-testing` skill directly.
+- Prefer the `e2e` skill directly.
 - Use this command as an orchestration wrapper for screenshot-first E2E validation and repair loops.
 
 ## Workflow
@@ -24,7 +24,7 @@ Treat arguments as optional scope (target flows, routes, modules, environments, 
    - Build a module list (pages, routes, features, or service surfaces).
 
 2. **Run E2E via skill**
-   - Apply the `e2e-testing` skill for test generation/execution.
+   - Apply the `e2e` skill for test generation/execution.
    - Focus on critical user journeys first, then broader coverage in scope.
 
 3. **Capture module screenshots with Playwright MCP**

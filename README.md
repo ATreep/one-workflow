@@ -1,6 +1,8 @@
 # One Workflow
 
-A high-layer DevOps workflow for beginners, based on [Everything-Claude-Code](https://github.com/affaan-m/everything-claude-code).
+A high-layer DevOps workflow for beginners, based on:
+- [Everything-Claude-Code](https://github.com/affaan-m/everything-claude-code).
+- [Superpowers](https://github.com/obra/superpowers)
 
 One Workflow allows you to build a mature software project with simply several commands.
 

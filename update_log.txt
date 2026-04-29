@@ -1,3 +1,8 @@
+2026.4.29 16:55:00 - v260429 - ATreep
+- Update skill references to namespaced format (one-workflow:, superpowers:) in overall-refactor, sdd, and sim-test skills
+- Add brainstorming step to overall-refactor and sdd skills
+- Add Superpowers reference to README
+
 2026.4.27 15:02:04 - v260427-3 - ATreep
 Sync plugin version in plugin.json and marketplace.json to v260427-3.
 

@@ -46,15 +46,18 @@ Complete each step fully before moving to the next.
 
 4. **Regenerate documentation**
    - Delete all existing documentation files first.
-   - Then follow the `new-docs` skill to generate a fresh `docs` set that reflects the new architecture.
+   - Then follow the `one-workflow:new-docs` skill to generate a fresh `docs` set that reflects the new architecture.
 
 5. **Reimplement the code**
-   - Using the `sdd` skill, rewrite the codebase to conform to the new architecture and newly generated docs.
+   - Using the `one-workflow:sdd` skill, rewrite the codebase to conform to the new architecture and newly generated docs.
    - Treat new docs as the source of truth.
 
 6. **Run simulated tests (conditional)**
-   - If `runSimTest` is `true`, run the `sim-test` skill to validate the refactored implementation.
+   - If `runSimTest` is `true`, run the `one-workflow:sim-test` skill to validate the refactored implementation.
    - If `runSimTest` is `false`, skip this step.
+
+7. **Brainstorming**
+  - Use `superpowers:brainstorming` during development.
 
 ## Rules
 
