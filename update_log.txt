@@ -1,3 +1,7 @@
+2026.4.30 10:48:00 - v260430 - ATreep
+- Add `sdd-notest` skill: spec-driven delivery variant that skips mandatory test writing
+- Update README.md to include `sdd-notest` in skills table, plugin structure, and usage examples
+
 2026.4.29 16:55:00 - v260429 - ATreep
 - Update skill references to namespaced format (one-workflow:, superpowers:) in overall-refactor, sdd, and sim-test skills
 - Add brainstorming step to overall-refactor and sdd skills
@@ -17,4 +21,8 @@ Clarify versioning rule in CLAUDE.md: state vYYMMDD is the canonical format, man
 - Migrate commands/*.md to skills/*.md with frontmatter for /one-workflow: namespace
 - Add CLAUDE.md (architecture + version-bump rules); refresh README install/skills sections
 - Bump version to v260427
+
+2026.4.30 10:48:00 - v260430 - ATreep
+- Add `sdd-notest` skill: spec-driven delivery variant that skips mandatory test writing
+- Update README.md to include `sdd-notest` in skills table, plugin structure, and usage examples
 
