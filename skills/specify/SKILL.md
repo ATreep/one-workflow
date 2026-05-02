@@ -6,6 +6,12 @@ description: Generate implementation-grade project specification documents from 
 
 Generate project specification documents directly from the current codebase.
 
+## Hard Rules (non-negotiable)
+
+1. **AI-reimplementable fidelity.** Every spec you produce must be detailed enough that another AI agent, given *only* the spec folder, can re-implement the entire project from scratch without reading the original source code. If a detail is needed to reproduce behavior, include it.
+
+2. **Output directory is `spec`.** All generated documents live under `spec/` — not `docs/`, not `specs/`, not any other name. If a `spec/` directory does not exist, create it. If one already exists, update it in place.
+
 ## Prerequisites
 
 This skill depends on the **everything-claude-code** plugin. Install it before using:
