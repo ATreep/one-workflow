@@ -10,7 +10,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 - `.claude-plugin/plugin.json` — plugin manifest (name, description, version)
 - `.claude-plugin/marketplace.json` — marketplace registration; **the `version` field here must always equal the one in `plugin.json`**
-- `skills/<name>/SKILL.md` — the four skills exposed by this plugin (`new-docs`, `sdd`, `sim-test`, `overall-refactor`). Each starts with a `description:` frontmatter that the Claude Code skill loader reads.
+- `skills/<name>/SKILL.md` — the four skills exposed by this plugin (`specify`, `sdd`, `sim-test`, `overall-refactor`). Each starts with a `description:` frontmatter that the Claude Code skill loader reads.
 - `commands/` — legacy mirror of the same prompts as standalone slash commands. Currently deleted on `main` (see `git status`); the plugin path under `skills/` is the canonical surface.
 
 ## Versioning rule (critical)
@@ -30,22 +30,22 @@ The skills are designed to compose, not to be used in isolation. Reading any sin
 
 ```
 overall-refactor  ──▶  refactor-clean (cleanup phase)
-                  ──▶  new-docs (regenerate docs phase)
+                  ──▶  specify (regenerate specs phase)
                   ──▶  sdd (reimplement phase)
                   ──▶  sim-test (optional final phase, gated by user yes/no)
 
-sdd               ──▶  reads docs/ → updates docs/ → delegates to Agent Team / Subagents
+sdd               ──▶  reads spec/ → updates spec/ → delegates to Agent Team / Subagents
                   ──▶  each teammate uses tdd-workflow skill internally
                   ──▶  uses planner agent for the up-front plan
 
-new-docs          ──▶  uses planner agent; writes everything under docs/
+specify           ──▶  uses planner agent; writes everything under spec/
 
 sim-test          ──▶  wraps e2e-testing skill + Playwright MCP screenshots
 ```
 
 Two implications when editing these files:
 
-1. **Cross-skill references must stay valid.** If you rename a phase or change a skill's expected output directory (`docs/`, `artifacts/screenshots/`), the calling skills break silently — the plugin doesn't validate this.
+1. **Cross-skill references must stay valid.** If you rename a phase or change a skill's expected output directory (`spec/`, `artifacts/screenshots/`), the calling skills break silently — the plugin doesn't validate this.
 2. **Frontmatter `description:` is the routing signal.** Claude Code uses it to decide when to surface the skill. Keep descriptions specific and verb-led.
 
 ## Non-obvious invariants encoded in the skills
@@ -54,8 +54,8 @@ These are easy to break with "harmless cleanups" — preserve them:
 
 - **`sdd` mandatory delegation**: the main thread must NEVER write production code or tests directly. All implementation goes through `TeamCreate` + `Agent` (Agent Team primary, Subagents fallback). Each teammate runs the `tdd-workflow` skill internally. Don't soften this language.
 - **`overall-refactor` mandatory first action**: the skill must ask the user `"Should I run a simulated test at the end using sim-test? (yes/no)"` *before* any other step and store the answer as `runSimTest`. Don't reorder this.
-- **`overall-refactor` strict sequential order**: the six phases (clean → understand → redesign → regen docs → reimplement → optional sim-test) must run sequentially, no parallelization. Phase 4 deletes existing docs before regenerating.
-- **`new-docs` output contract**: docs go under `docs/`, prefer many small files over one large file, and the doc set must be detailed enough to rebuild the project from docs alone (it is the spec the `sdd` skill consumes).
+- **`overall-refactor` strict sequential order**: the six phases (clean → understand → redesign → regen specs → reimplement → optional sim-test) must run sequentially, no parallelization. Phase 4 deletes existing specs before regenerating.
+- **`specify` output contract**: specs go under `spec/`, prefer many small files over one large file, and the spec set must be detailed enough to rebuild the project from specs alone (it is the spec the `sdd` skill consumes).
 
 ## Installation surface (for context when editing the README/manifest)
 
@@ -70,7 +70,7 @@ or
 /plugin install one-workflow
 ```
 
-After install, skills are namespaced: `/one-workflow:new-docs`, `/one-workflow:sdd`, `/one-workflow:sim-test`, `/one-workflow:overall-refactor`.
+After install, skills are namespaced: `/one-workflow:specify`, `/one-workflow:sdd`, `/one-workflow:sim-test`, `/one-workflow:overall-refactor`.
 
 ## Working in this repo
 

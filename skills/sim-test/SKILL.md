@@ -6,15 +6,18 @@ description: End-to-end simulation test workflow using e2e-testing with Playwrig
 
 Run end-to-end validation for the current project with screenshot-driven issue fixing.
 
-## Arguments
+## Prerequisites
 
-`$ARGUMENTS`
+This skill depends on the **everything-claude-code** plugin. Install it before using:
 
-Treat arguments as optional scope (target flows, routes, modules, environments, or tags). If omitted, test all critical flows.
+```
+/plugin marketplace add https://github.com/affaan-m/everything-claude-code
+/plugin install everything-claude-code@everything-claude-code
+```
 
 ## Canonical Surface
 
-- Prefer the `e2e` skill directly.
+- Prefer the `everything-claude-code:e2e` skill directly.
 - Use this command as an orchestration wrapper for screenshot-first E2E validation and repair loops.
 
 ## Workflow
@@ -24,7 +27,7 @@ Treat arguments as optional scope (target flows, routes, modules, environments, 
    - Build a module list (pages, routes, features, or service surfaces).
 
 2. **Run E2E via skill**
-   - Apply the `e2e` skill for test generation/execution.
+   - Apply the `everything-claude-code:e2e` skill for test generation/execution.
    - Focus on critical user journeys first, then broader coverage in scope.
 
 3. **Capture module screenshots with Playwright MCP**

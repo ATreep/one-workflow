@@ -30,7 +30,7 @@ Or add as a marketplace:
 After installation, invoke skills with the plugin namespace:
 
 ```
-/one-workflow:new-docs
+/one-workflow:specify
 /one-workflow:sdd
 /one-workflow:sdd-notest
 /one-workflow:sim-test
@@ -48,7 +48,7 @@ cp commands/*.md ~/.claude/commands/
 Then use the short-form commands:
 
 ```
-/new-docs
+/specify
 /sdd
 /sdd-notest
 /sim-test
@@ -61,11 +61,11 @@ Then use the short-form commands:
 
 | Skill | Description |
 |-------|-------------|
-| `/one-workflow:new-docs` | Generate implementation-grade project documentation from source code into `docs` |
-| `/one-workflow:sdd` | Spec-driven delivery: read docs, update docs first, then implement via TDD with Agent Team |
+| `/one-workflow:specify` | Generate implementation-grade project specification documents from source code into `spec` |
+| `/one-workflow:sdd` | Spec-driven delivery: read specs, update specs first, then implement via TDD with Agent Team |
 | `/one-workflow:sdd-notest` | Same as `sdd`, but skips test writing — faster for development when tests aren't required |
 | `/one-workflow:sim-test` | End-to-end simulation testing with Playwright MCP screenshots and agent-driven fixes |
-| `/one-workflow:overall-refactor` | Full-project refactor: dead code cleanup, redesign, docs regeneration, reimplementation |
+| `/one-workflow:overall-refactor` | Full-project refactor: dead code cleanup, redesign, spec regeneration, reimplementation |
 
 ---
 
@@ -76,7 +76,7 @@ one-workflow/
 ├── .claude-plugin/
 │   └── plugin.json          # Plugin manifest
 ├── skills/                  # Plugin skills (namespaced)
-│   ├── new-docs/
+│   ├── specify/
 │   │   └── SKILL.md
 │   ├── sdd/
 │   │   └── SKILL.md
@@ -87,7 +87,7 @@ one-workflow/
 │   └── overall-refactor/
 │       └── SKILL.md
 ├── commands/                # Standalone commands (legacy, optional)
-│   ├── new-docs.md
+│   ├── specify.md
 │   ├── sdd.md
 │   ├── sim-test.md
 │   └── overall-refactor.md
