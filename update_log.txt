@@ -1,3 +1,6 @@
+2026.5.3 12:02:02 - v260503 - treep
+Add `update-spec` skill for incremental spec updates based on git changes; update README.md
+
 2026.4.30 09:15:14 - v260430-1 - ATreep
 Sync plugin version in plugin.json and marketplace.json to v260430-1.
 

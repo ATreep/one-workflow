@@ -31,6 +31,7 @@ After installation, invoke skills with the plugin namespace:
 
 ```
 /one-workflow:specify
+/one-workflow:update-spec
 /one-workflow:sdd
 /one-workflow:sdd-notest
 /one-workflow:sim-test
@@ -62,6 +63,7 @@ Then use the short-form commands:
 | Skill | Description |
 |-------|-------------|
 | `/one-workflow:specify` | Generate implementation-grade project specification documents from source code into `spec` |
+| `/one-workflow:update-spec` | Check what source code has been modified (vs last commit), then update `spec/` documents incrementally |
 | `/one-workflow:sdd` | Spec-driven delivery: read specs, update specs first, then implement via TDD with Agent Team |
 | `/one-workflow:sdd-notest` | Same as `sdd`, but skips test writing — faster for development when tests aren't required |
 | `/one-workflow:sim-test` | End-to-end simulation testing with Playwright MCP screenshots and agent-driven fixes |
@@ -77,6 +79,8 @@ one-workflow/
 │   └── plugin.json          # Plugin manifest
 ├── skills/                  # Plugin skills (namespaced)
 │   ├── specify/
+│   │   └── SKILL.md
+│   ├── update-spec/
 │   │   └── SKILL.md
 │   ├── sdd/
 │   │   └── SKILL.md
