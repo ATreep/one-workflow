@@ -1,3 +1,6 @@
+2026.5.3 16:11:21 - v260503-1 - treep
+Add `update-commit-plugin` command; sync plugin version in plugin.json and marketplace.json to v260503-1
+
 2026.5.3 12:02:02 - v260503 - treep
 Add `update-spec` skill for incremental spec updates based on git changes; update README.md
 

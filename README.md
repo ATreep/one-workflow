@@ -6,21 +6,13 @@ A high-layer DevOps workflow for beginners, based on:
 
 One Workflow allows you to build a mature software project with simply several commands.
 
-*Continuously updating...*
-
 ---
 
 ## Installation
 
-### As a Plugin (Recommended)
+### As a Plugin 
 
 Install via Claude Code's plugin system:
-
-```bash
-/plugin install one-workflow@github.com/ATreep/one-workflow
-```
-
-Or add as a marketplace:
 
 ```bash
 /plugin marketplace add ATreep/one-workflow
@@ -36,24 +28,6 @@ After installation, invoke skills with the plugin namespace:
 /one-workflow:sdd-notest
 /one-workflow:sim-test
 /one-workflow:overall-refactor
-```
-
-### As Standalone Commands (Legacy)
-
-Copy the files from `commands/` into your `~/.claude/commands/` directory:
-
-```bash
-cp commands/*.md ~/.claude/commands/
-```
-
-Then use the short-form commands:
-
-```
-/specify
-/sdd
-/sdd-notest
-/sim-test
-/overall-refactor
 ```
 
 ---
@@ -90,10 +64,5 @@ one-workflow/
 │   │   └── SKILL.md
 │   └── overall-refactor/
 │       └── SKILL.md
-├── commands/                # Standalone commands (legacy, optional)
-│   ├── specify.md
-│   ├── sdd.md
-│   ├── sim-test.md
-│   └── overall-refactor.md
 └── README.md
 ```
