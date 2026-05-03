@@ -48,17 +48,48 @@ This skill depends on the following plugins. Install them before using:
      - Ensure tests cover modified behavior and regressions.
    - **Trust but verify**: After teammates/subagents report completion, the main thread inspects the actual diff and test results before declaring the step done.
 
+#### Parallel Worktree Strategy for Multi-Module Demands
+
+When the user proposes **multiple independent demands on multiple modules**, use isolated git worktrees so each demand can be developed in parallel without merge conflicts during development:
+
+1. **Classify demands**: Group the user's requests into independent work items. Each item must target a distinct module or non-overlapping file surface. If two demands touch the same files, they are NOT independent — sequence them instead.
+
+2. **Create worktrees**: For each independent demand, create a worktree with its own branch:
+   ```
+   git worktree add ../<project>-<demand-slug> -b <demand-slug>
+   ```
+   Use the `Agent` tool with `isolation: "worktree"` when spawning subagents, or manually manage worktrees when using Agent Team.
+
+3. **Assign one teammate/subagent per worktree**: Each agent works in its own worktree directory. Inside each worktree, the agent follows the full TDD flow (`everything-claude-code:tdd`).
+
+4. **Merge as each worktree completes**: When an agent finishes its worktree (tests pass, code reviewed):
+   - Switch back to the main working branch.
+   - Merge the worktree branch: `git merge --no-ff <demand-slug>`.
+   - Clean up the worktree: `git worktree remove ../<project>-<demand-slug>`.
+   - Resolve any merge conflicts at this stage — not inside the worktree.
+   - Delete the feature branch after merge: `git branch -d <demand-slug>`.
+
+5. **Repeat until all worktrees are integrated**: Process merges sequentially as agents complete. If a merge introduces conflicts with a still-running worktree, note the conflict for the remaining agent to rebase against once it completes.
+
+6. **Final verification**: After all worktrees are merged, run the full test suite on the integrated branch to catch cross-module regressions.
+
+**When NOT to use worktrees** (use Agent Team on a single branch instead):
+- Demands are tightly coupled and touch the same files.
+- Only one demand exists.
+- The overhead of worktree management exceeds the parallelism benefit (e.g., trivial one-line fixes).
+
 5. **Consistency check after implementation**
    - Verify code and specs match.
    - If implementation details changed during coding, update `spec` again to keep parity.
 
 6. **Brainstorming**
-  - Use `superpowers:brainstorming` during development.
+   - Use `superpowers:brainstorming` during development.
 
 ## Rules
 
 - Use `everything-claude-code:plan` skill to draft a plan before your actions.
 - **Enforce Agent Team (primary) or Subagents for implementation**. The main thread orchestrates and verifies; all production code and tests are written by teammates/subagents.
+- **Parallel worktrees for independent multi-module demands**. When multiple independent module demands exist, create one worktree per demand and assign a dedicated agent to each. Merge each worktree into the main branch as it completes.
 - This command is reusable across projects; do not assume project-specific paths beyond `spec`.
 - Do not skip specification read/update phases for module changes.
 - Specifications are the implementation contract; code must follow them.

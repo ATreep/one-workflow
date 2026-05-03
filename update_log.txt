@@ -1,3 +1,6 @@
+2026.5.3 21:31:52 - v260503-2 - treep
+Add parallel worktree strategy to SDD skill for multi-module demands; update plugin version to v260503-2
+
 2026.5.3 16:11:21 - v260503-1 - treep
 Add `update-commit-plugin` command; sync plugin version in plugin.json and marketplace.json to v260503-1
 
