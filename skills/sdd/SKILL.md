@@ -37,16 +37,18 @@ This skill depends on the following plugins. Install them before using:
    - Keep specs in `spec` and prefer multiple focused files.
    - Ensure changed/new module specs are explicit enough to drive implementation.
 
-4. **Implement via `everything-claude-code:tdd` skill — execute through Agent Team (primary) or Subagents**
+4. **Implement via `everything-claude-code:tdd` skill — execute through Agent Team + Parallel Worktrees (primary) or Subagents (fallback)**
    - **Mandatory delegation**: The main thread orchestrates only. Do NOT write production code or tests directly in the main thread.
-   - **Primary mode — Agent Team**: Spin up a team via `TeamCreate`, spawn teammates with the `Agent` tool (`team_name` + `name`), break the work into tasks via `TaskCreate`, and assign tasks via `TaskUpdate` (`owner`).
-     - Prefer Agent Team when the work has multiple parallelizable tracks, requires coordination across modules, or benefits from role specialization (e.g., planner, implementer, reviewer, test-runner).
+   - **Primary mode — Agent Team + Parallel Worktrees**: Maximize development speed by parallelizing across worktrees.
+     - Spin up a team via `TeamCreate`, spawn teammates with the `Agent` tool (`team_name` + `name`), break the work into tasks via `TaskCreate`, and assign tasks via `TaskUpdate` (`owner`).
+     - **Always prefer parallel worktrees**: Analyze the demand and identify every independent track. Create one worktree per track so all tracks develop simultaneously. Only consolidate into fewer worktrees when tracks share the same files and cannot be separated.
      - Use `SendMessage` for inter-teammate communication; rely on the shared task list for status.
-   - **Fallback mode — Subagents**: If a single isolated track is sufficient (small surface area, no coordination needed), dispatch one or more Subagents via the `Agent` tool instead of forming a team.
+   - **Fallback mode — Subagents (linear, single worktree)**: Use only when the demand **cannot** be decomposed into parallel tracks — e.g., a single-file change, a tightly coupled refactor, or an explicitly sequential dependency chain. In this mode, dispatch one or more sequential Subagents via the `Agent` tool on a single worktree.
    - **Inside each teammate/subagent**: Use the `everything-claude-code:tdd` skill for development execution.
      - Stay strict on RED -> GREEN -> REFACTOR.
      - Ensure tests cover modified behavior and regressions.
    - **Trust but verify**: After teammates/subagents report completion, the main thread inspects the actual diff and test results before declaring the step done.
+   - **Mandatory worktree lifecycle**: When the skill is invoked, worktree(s) **must** be created for implementation. After development completes in each worktree, the worktree branch is merged back into the local branch before finishing.
 
 #### Parallel Worktree Strategy for Multi-Module Demands
 
@@ -73,10 +75,12 @@ When the user proposes **multiple independent demands on multiple modules**, use
 
 6. **Final verification**: After all worktrees are merged, run the full test suite on the integrated branch to catch cross-module regressions.
 
-**When NOT to use worktrees** (use Agent Team on a single branch instead):
-- Demands are tightly coupled and touch the same files.
-- Only one demand exists.
+**When to use linear subagents instead** (fallback, single worktree):
+- Demand is a single non-decomposable task (one file, tightly coupled changes, or explicitly sequential dependency).
 - The overhead of worktree management exceeds the parallelism benefit (e.g., trivial one-line fixes).
+
+**When to use Agent Team on a single branch instead** (no worktrees):
+- Demands are tightly coupled, touch the same files, but still benefit from role specialization (e.g., planner + implementer + reviewer coordinating on shared files).
 
 5. **Consistency check after implementation**
    - Verify code and specs match.
@@ -88,8 +92,8 @@ When the user proposes **multiple independent demands on multiple modules**, use
 ## Rules
 
 - Use `everything-claude-code:plan` skill to draft a plan before your actions.
-- **Enforce Agent Team (primary) or Subagents for implementation**. The main thread orchestrates and verifies; all production code and tests are written by teammates/subagents.
-- **Parallel worktrees for independent multi-module demands**. When multiple independent module demands exist, create one worktree per demand and assign a dedicated agent to each. Merge each worktree into the main branch as it completes.
+- **Enforce Agent Team + Parallel Worktrees as the default implementation strategy**. The main thread orchestrates and verifies; all production code and tests are written by teammates/subagents. Always decompose the demand into parallel tracks and create one worktree per track. Only fall back to linear subagent mode when the demand is strictly non-parallelizable.
+- **Worktrees are mandatory**. When this skill is invoked, worktree(s) must be created for implementation. Each completed worktree is merged back into the local branch before finishing.
 - This command is reusable across projects; do not assume project-specific paths beyond `spec`.
 - Do not skip specification read/update phases for module changes.
 - Specifications are the implementation contract; code must follow them.

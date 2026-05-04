@@ -1,3 +1,6 @@
+2026.5.4 12:42:00 - v260504 - treep
+Update SDD skill to prioritize Agent Team + parallel worktrees as primary implementation strategy; worktrees mandatory on skill invocation
+
 2026.5.3 21:31:52 - v260503-2 - treep
 Add parallel worktree strategy to SDD skill for multi-module demands; update plugin version to v260503-2
 
