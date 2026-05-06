@@ -8,6 +8,10 @@ Run end-to-end validation for the current project with screenshot-driven issue f
 
 ## Prerequisites
 
+This skill is **only compatible with web applications**. Before proceeding, verify the project is a web app (e.g., uses a browser-based frontend with HTML/CSS/JS, React, Vue, Next.js, SvelteKit, etc.). If the project is not a web app (CLI tool, library, backend service without a UI, mobile app, etc.), **refuse to run** and inform the user:
+
+> "Simulation testing requires a web application with a browser-based UI. This project does not appear to be a web app, so sim-test cannot be used."
+
 This skill depends on the **everything-claude-code** plugin. Install it before using:
 
 ```

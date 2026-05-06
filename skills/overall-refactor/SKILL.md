@@ -23,7 +23,10 @@ This skill depends on the following plugins. Install them before using:
 
 ## Mandatory first action (before doing anything else)
 
-Immediately ask the user this exact question and wait for the answer:
+First, determine if the project is a web application (e.g., uses a browser-based frontend with HTML/CSS/JS, React, Vue, Next.js, SvelteKit, etc.).
+
+- **If the project is NOT a web app:** Set `runSimTest = false` automatically and proceed. Do not ask the user.
+- **If the project IS a web app:** Ask the user this exact question and wait for the answer:
 
 > "Should I run a simulated test at the end using `sim-test`? (yes/no)"
 
@@ -31,7 +34,7 @@ Store the response as `runSimTest`:
 - `yes` -> `runSimTest = true`
 - `no` -> `runSimTest = false`
 
-Do not execute any other step before this prompt is answered.
+Do not execute any other step before this determination (and prompt, if applicable) is resolved.
 
 ## Sequential workflow (strict order)
 
