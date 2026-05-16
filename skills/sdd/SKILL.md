@@ -48,7 +48,7 @@ This skill depends on the following plugins. Install them before using:
      - Stay strict on RED -> GREEN -> REFACTOR.
      - Ensure tests cover modified behavior and regressions.
    - **Trust but verify**: After teammates/subagents report completion, the main thread inspects the actual diff and test results before declaring the step done.
-   - **Mandatory worktree lifecycle**: When the skill is invoked, worktree(s) **must** be created for implementation. After development completes in each worktree, the worktree branch is merged back into the local branch before finishing.
+   - **Mandatory worktree lifecycle**: Worktrees are temporary development sandboxes. Every worktree created **must** be merged back into the original local branch before the skill invocation is considered complete. A worktree that is created but never merged is an **incomplete delivery** — the skill is not done until all worktree branches are integrated into the working branch and cleaned up.
 
 #### Parallel Worktree Strategy for Multi-Module Demands
 
@@ -75,6 +75,8 @@ When the user proposes **multiple independent demands on multiple modules**, use
 
 6. **Final verification**: After all worktrees are merged, run the full test suite on the integrated branch to catch cross-module regressions.
 
+7. **Confirm all worktrees merged to local**: Before reporting completion, verify that every worktree created during this invocation has been merged back into the original local branch and that no orphaned worktrees remain (`git worktree list`). This is a hard gate — do not report the skill as complete until all worktrees are merged and cleaned up.
+
 **When to use linear subagents instead** (fallback, single worktree):
 - Demand is a single non-decomposable task (one file, tightly coupled changes, or explicitly sequential dependency).
 - The overhead of worktree management exceeds the parallelism benefit (e.g., trivial one-line fixes).
@@ -93,7 +95,7 @@ When the user proposes **multiple independent demands on multiple modules**, use
 
 - Use `everything-claude-code:plan` skill to draft a plan before your actions.
 - **Enforce Agent Team + Parallel Worktrees as the default implementation strategy**. The main thread orchestrates and verifies; all production code and tests are written by teammates/subagents. Always decompose the demand into parallel tracks and create one worktree per track. Only fall back to linear subagent mode when the demand is strictly non-parallelizable.
-- **Worktrees are mandatory**. When this skill is invoked, worktree(s) must be created for implementation. Each completed worktree is merged back into the local branch before finishing.
+- **Worktrees are mandatory**. When this skill is invoked, worktree(s) must be created for implementation. Each completed worktree **must** be merged back into the original local branch before finishing. Leaving worktrees unmerged is a violation — the delivery is not complete until all branches are integrated.
 - This command is reusable across projects; do not assume project-specific paths beyond `spec`.
 - Do not skip specification read/update phases for module changes.
 - Specifications are the implementation contract; code must follow them.
@@ -107,3 +109,4 @@ Provide a concise execution summary including:
 - specs created/updated in `spec`
 - TDD execution status (tests added/updated, pass/fail)
 - implemented modules and final parity status between specs and code
+- **worktree merge status**: confirm all worktrees merged back to local branch (or list any that remain)
