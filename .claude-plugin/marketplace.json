@@ -9,7 +9,7 @@
       "name": "one-workflow",
       "source": "./",
       "description": "A high-layer DevOps workflow for beginners. Build mature software projects with simple commands: documentation generation, spec-driven development, simulation testing, and full-project refactoring.",
-      "version": "v260514",
+      "version": "v260516",
       "author": {
         "name": "ATreep"
       }
