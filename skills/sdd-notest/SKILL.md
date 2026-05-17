@@ -1,5 +1,5 @@
 ---
-description: Spec-driven delivery flow that reads specs, updates specs first for module changes, then implements inside an Agent Team (primary) or Subagents. This approach may be faster than sdd during development since no tests are required beforehand.
+description: Spec-driven delivery flow that reads specs, updates specs first for module changes, then implements inside an Agent Team (primary) or Subagents. Use when speed is a priority and the user demand is low-risk or well-understood.
 ---
 
 ## Prerequisites
@@ -19,5 +19,7 @@ This skill delegates to `one-workflow:sdd`, which depends on the following plugi
 
 # SDD (No Test)
 
-Use `one-workflow:sdd` skill to implement user demand with a documentation-first workflow, but without the requirement for test creation or passing before implementation.
-Without test first development, this workflow may be faster during development but carries higher risk of implementation drift from specs and potential regressions. Use when speed is a priority and the user demand is low-risk or well-understood.
+- Use `one-workflow:sdd` skill to implement user demand, but without the requirement for test creation or passing before implementation.
+- Without test first development, this workflow may be faster during development but carries higher risk of implementation drift from specs and potential regressions. 
+- Obey all rules (except test) defined in `one-workflow:sdd`.
+- Merge all worktrees after implementation is complete.
