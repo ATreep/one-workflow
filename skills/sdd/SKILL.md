@@ -66,9 +66,10 @@ When the user proposes **multiple independent demands on multiple modules**, use
 
 4. **Merge as each worktree completes** (automatic, no user confirmation needed): When an agent finishes its worktree (tests pass, code reviewed):
    - Switch back to the main working branch.
+   - Review the diff per file before merging: `git diff main...<demand-slug>`.
+   - Handle each conflict carefully — resolve explicitly by reading both sides. Do not overlay files blindly or accept theirs/ours without understanding the change.
    - Merge the worktree branch: `git merge --no-ff <demand-slug>`.
    - Clean up the worktree: `git worktree remove ../<project>-<demand-slug>`.
-   - Resolve any merge conflicts at this stage — not inside the worktree.
    - Delete the feature branch after merge: `git branch -d <demand-slug>`.
    - **Do not ask the user before merging.** The worktree was created for this purpose — merge it back immediately upon completion.
 
@@ -97,6 +98,7 @@ When the user proposes **multiple independent demands on multiple modules**, use
 - Use `everything-claude-code:plan` skill to draft a plan before your actions.
 - **Enforce Agent Team + Parallel Worktrees as the default implementation strategy**. The main thread orchestrates and verifies; all production code and tests are written by teammates/subagents. Always decompose the demand into parallel tracks and create one worktree per track. Only fall back to linear subagent mode when the demand is strictly non-parallelizable.
 - **Worktrees are mandatory**. When this skill is invoked, worktree(s) must be created for implementation. Each completed worktree **must** be merged back into the original local branch before finishing. Leaving worktrees unmerged is a violation — the delivery is not complete until all branches are integrated. **Merge automatically without user confirmation — never leave a worktree unmerged while waiting for approval.**
+- **Handle merge conflicts carefully**. When merging worktree branches, review each file's diff and resolve conflicts explicitly. Do not overlay files blindly or accept default merge strategies without understanding the impact.
 - This command is reusable across projects; do not assume project-specific paths beyond `spec`.
 - Do not skip specification read/update phases for module changes.
 - Specifications are the implementation contract; code must follow them.
