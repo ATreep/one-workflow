@@ -48,7 +48,7 @@ This skill depends on the following plugins. Install them before using:
      - Stay strict on RED -> GREEN -> REFACTOR.
      - Ensure tests cover modified behavior and regressions.
    - **Trust but verify**: After teammates/subagents report completion, the main thread inspects the actual diff and test results before declaring the step done.
-   - **Mandatory worktree lifecycle**: Worktrees are temporary development sandboxes. Every worktree created **must** be merged back into the original local branch before the skill invocation is considered complete. A worktree that is created but never merged is an **incomplete delivery** — the skill is not done until all worktree branches are integrated into the working branch and cleaned up.
+   - **Mandatory worktree lifecycle**: Worktrees are temporary development sandboxes. Every worktree created **must** be merged back into the original local branch before the skill invocation is considered complete. A worktree that is created but never merged is an **incomplete delivery** — the skill is not done until all worktree branches are integrated into the working branch and cleaned up. **Merge automatically — do not wait for user confirmation.**
 
 #### Parallel Worktree Strategy for Multi-Module Demands
 
@@ -64,12 +64,13 @@ When the user proposes **multiple independent demands on multiple modules**, use
 
 3. **Assign one teammate/subagent per worktree**: Each agent works in its own worktree directory. Inside each worktree, the agent follows the full TDD flow (`everything-claude-code:tdd`).
 
-4. **Merge as each worktree completes**: When an agent finishes its worktree (tests pass, code reviewed):
+4. **Merge as each worktree completes** (automatic, no user confirmation needed): When an agent finishes its worktree (tests pass, code reviewed):
    - Switch back to the main working branch.
    - Merge the worktree branch: `git merge --no-ff <demand-slug>`.
    - Clean up the worktree: `git worktree remove ../<project>-<demand-slug>`.
    - Resolve any merge conflicts at this stage — not inside the worktree.
    - Delete the feature branch after merge: `git branch -d <demand-slug>`.
+   - **Do not ask the user before merging.** The worktree was created for this purpose — merge it back immediately upon completion.
 
 5. **Repeat until all worktrees are integrated**: Process merges sequentially as agents complete. If a merge introduces conflicts with a still-running worktree, note the conflict for the remaining agent to rebase against once it completes.
 
@@ -95,7 +96,7 @@ When the user proposes **multiple independent demands on multiple modules**, use
 
 - Use `everything-claude-code:plan` skill to draft a plan before your actions.
 - **Enforce Agent Team + Parallel Worktrees as the default implementation strategy**. The main thread orchestrates and verifies; all production code and tests are written by teammates/subagents. Always decompose the demand into parallel tracks and create one worktree per track. Only fall back to linear subagent mode when the demand is strictly non-parallelizable.
-- **Worktrees are mandatory**. When this skill is invoked, worktree(s) must be created for implementation. Each completed worktree **must** be merged back into the original local branch before finishing. Leaving worktrees unmerged is a violation — the delivery is not complete until all branches are integrated.
+- **Worktrees are mandatory**. When this skill is invoked, worktree(s) must be created for implementation. Each completed worktree **must** be merged back into the original local branch before finishing. Leaving worktrees unmerged is a violation — the delivery is not complete until all branches are integrated. **Merge automatically without user confirmation — never leave a worktree unmerged while waiting for approval.**
 - This command is reusable across projects; do not assume project-specific paths beyond `spec`.
 - Do not skip specification read/update phases for module changes.
 - Specifications are the implementation contract; code must follow them.
