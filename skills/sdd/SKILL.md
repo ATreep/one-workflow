@@ -36,6 +36,15 @@ This skill depends on the following plugins. Install them before using:
    - Follow the `one-workflow:specify` skill as the specification-writing standard.
    - Keep specs in `spec` and prefer multiple focused files.
    - Ensure changed/new module specs are explicit enough to drive implementation.
+   - **Append a change record** at the end of every modified spec file. Use this format:
+     ```
+     ## Change Log
+
+     | Date | Version | Author | Description |
+     |------|---------|--------|-------------|
+     | YYYY-MM-DD | x.y.z | author-name | Brief description of what changed and why |
+     ```
+     Add one row per modification. Never delete previous rows — the table is append-only.
 
 4. **Implement via `everything-claude-code:tdd` skill — execute through Agent Team + Parallel Worktrees (primary) or Subagents (fallback)**
    - **Mandatory delegation**: The main thread orchestrates only. Do NOT write production code or tests directly in the main thread.
