@@ -1,5 +1,5 @@
 {
   "name": "one-workflow",
   "description": "Transform rough ideas into actionable implementation: brainstorm requirements, write plans, optionally run SpecKit for double confirmation, then execute with TDD and subagent-driven development.",
-  "version": "v260612-213020"
+  "version": "v260612-223841"
 }

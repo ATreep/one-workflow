@@ -1,11 +1,45 @@
 ---
 name: brainstorm-specify-implement
-description: Use when the user wants to transform a rough idea or feature request into actionable implementation. Triggers on `/brainstorm-specify-implement` or when the user asks to "spec out" a feature idea and build it.
+description: Use when the user wants to transform a rough idea or feature request into actionable implementation — even when the requirement seems trivial or simple. Triggers on `/brainstorm-specify-implement` or when the user asks to "spec out" a feature idea and build it. Do NOT skip any step regardless of how simple the requirement appears.
 ---
 
 # Brainstorm, Specify, and Implement
 
-Orchestrate a structured workflow: validate prerequisites → brainstorm → write implementation plan → ask user whether to use SpecKit for double spec confirmation, or proceed directly to subagent-driven implementation.
+## Foundational Principle
+
+**Every step in this workflow is mandatory. No exceptions.** The apparent simplicity of a requirement is NEVER a valid reason to skip a step. Each step exists to prevent known failure modes — brainstorming catches unstated assumptions, writing-plans surfaces hidden complexity, and the implementation methodology prevents quality regressions. A "simple" requirement can hide unstated edge cases, architectural implications, and integration surprises that only emerge through structured process.
+
+**Violating the letter of the rules is violating the spirit of the rules.** There is no "this is different because..." escape hatch.
+
+## Anti-Skipping Rationalization Table
+
+Agents rationalize skipping steps. Every one of these rationalizations is wrong:
+
+| Rationalization | Reality |
+|---------|---------|
+| "This requirement is too simple to need brainstorming" | Simple requirements hide unstated assumptions. Brainstorming catches them in 2 minutes instead of 2 hours of rework. |
+| "The implementation plan is obvious — I can skip writing-plans" | "Obvious" plans skip dependency ordering, edge case handling, and verification strategy. Writing-plans makes these explicit. |
+| "It's just a one-line change — I don't need the full workflow" | One-line changes have caused outages. The workflow scales to the risk, not the line count. Every step still runs. |
+| "The user clearly knows what they want — no clarification needed" | Users state WHAT, not HOW. Brainstorming surfaces the HOW questions they didn't know to ask. |
+| "Skipping SpecKit saves time on simple tasks" | Skipping SpecKit skips double-confirmation. The time "saved" is spent debugging misunderstood requirements later. |
+| "I can combine brainstorming and plan-writing into one step" | Combining steps conflates exploration with commitment. Separate phases produce better decisions. |
+| "The user is in a hurry — I'll skip to implementation" | Hurry is precisely when structured process prevents costly mistakes. The workflow is the fastest path to correct implementation. |
+| "I already know the codebase well enough to skip analysis" | Familiarity breeds blind spots. The structured steps surface what familiarity overlooks. |
+
+## Red Flags — STOP and Re-read the Workflow
+
+If you think ANY of the following, you are rationalizing. Stop immediately and execute every step:
+
+- "This is simple enough to skip brainstorming"
+- "I can skip straight to implementation"
+- "The plan is obvious — no need for writing-plans"
+- "The user clearly knows what they want"
+- "It's just a small change"
+- "I'll combine steps to be more efficient"
+- "This doesn't need the full workflow"
+- "The requirement is straightforward"
+
+**All of these mean: Execute every step of this workflow in order, without exception.**
 
 ## Decision Flow
 
@@ -14,13 +48,14 @@ digraph workflow {
     rankdir=TB;
 
     start [label="Skill invoked", shape=doublecircle];
+    anti_skip [label="REMINDER: Every step\nis mandatory — even\nfor simple requirements", shape=box, style=filled, fillcolor=lightyellow];
     check_superpowers [label="Required Superpowers\nskills exist?", shape=diamond];
     stop_superpowers [label="STOP: Prompt user to\ninstall Superpowers plugin", shape=box];
     check_requirements [label="User provided\nrequirements?", shape=diamond];
     stop_no_req [label="STOP: Prompt user\nto provide requirements", shape=box];
     echo_req [label="Echo requirements\nback to user", shape=box];
-    brainstorm [label="Run superpowers:brainstorming\n(clarify, no Spec doc)", shape=box];
-    writing_plan [label="Run superpowers:writing-plans\n(auto-invoke, no confirmation)", shape=box];
+    brainstorm [label="Run superpowers:brainstorming\n(clarify, no Spec doc)\nMANDATORY — even if\nrequirement seems trivial", shape=box];
+    writing_plan [label="Run superpowers:writing-plans\n(auto-invoke, no confirmation)\nMANDATORY — even if\nplan seems obvious", shape=box];
     ask_speckit [label="Ask user: use SpecKit\nfor double spec\nconfirmation?", shape=diamond];
     check_speckit [label="speckit-specify skill\nexists?", shape=diamond];
     stop_speckit [label="STOP: Prompt user to\nrun specify init", shape=box];
@@ -33,7 +68,8 @@ digraph workflow {
     implement_direct [label="Invoke superpowers:\nsubagent-driven-development\n(each subagent obeys\nTDD norms)", shape=box];
     done [label="Done", shape=doublecircle];
 
-    start -> check_superpowers;
+    start -> anti_skip;
+    anti_skip -> check_superpowers;
     check_superpowers -> stop_superpowers [label="missing"];
     check_superpowers -> check_requirements [label="all exist"];
     check_requirements -> stop_no_req [label="no"];
@@ -64,9 +100,11 @@ This skill depends on two external plugins:
 
 ## Step-by-Step Workflow
 
-Execute each step in order. Do NOT skip ahead. If any step fails its check, stop immediately and output the specified message to the user.
+Execute each step in order. Do NOT skip ahead. **This includes Steps 1 and 2 — prerequisites must be validated even if the requirement seems trivial.** If any step fails its check, stop immediately and output the specified message to the user.
 
 ### Step 1 — Check Superpowers Skills
+
+**This step is mandatory for every invocation — even when the requirement is a one-line change.**
 
 Verify that ALL FOUR of the following skills exist in the current session:
 
@@ -81,9 +119,11 @@ Verify that ALL FOUR of the following skills exist in the current session:
 This skill depends on four skills from the Superpowers plugin: brainstorming, writing-plans, test-driven-development, and subagent-driven-development. Please install the Superpowers plugin and try again.
 ```
 
-**If all exist**, proceed to Step 2.
+**If all exist**, proceed to Step 2. Do NOT skip to implementation.
 
 ### Step 2 — Confirm User Requirements
+
+**This step is mandatory — even when the user's requirement appears in the same message as the skill invocation.**
 
 Check whether the user provided requirements — either inline when invoking this skill, or in the preceding conversation context.
 
@@ -103,25 +143,31 @@ Confirmed requirements:
 Proceeding to the brainstorming phase to refine the specific requirements.
 ```
 
-Then proceed to Step 3.
+Then proceed to Step 3. Do NOT skip to implementation even if the echo confirms exactly what the user said — brainstorming may still surface unstated assumptions.
 
 ### Step 3 — Brainstorming
+
+**This step is mandatory — even when the requirement seems obvious and fully specified.**
 
 Invoke `superpowers:brainstorming` via the Skill tool to clarify and refine the user's requirements.
 
 **Critical constraint:** Use brainstorming to explore intent, scope, edge cases, and design decisions. Do NOT generate a Spec document during this step.
 
-After brainstorming concludes and requirements are clarified, proceed to Step 4.
+After brainstorming concludes and requirements are clarified, proceed to Step 4. Do NOT skip to implementation — the brainstorming output must be transformed into a structured plan.
 
 ### Step 4 — Write Implementation Plan (Auto-Invoke)
 
+**This step is mandatory — even when the implementation seems obvious from the clarified requirements.**
+
 Immediately invoke `superpowers:writing-plans` via the Skill tool to generate a structured implementation plan from the clarified requirements. **Do NOT ask the user whether to proceed — invoke writing-plans automatically without confirmation.**
 
-This step transforms the brainstorming output into a concrete, actionable plan before any spec or implementation work begins.
+This step transforms the brainstorming output into a concrete, actionable plan before any spec or implementation work begins. An "obvious" plan written in your head is not a substitute — writing-plans surfaces dependency ordering, edge cases, and verification strategy that informal planning misses.
 
 After the writing-plan concludes, proceed to Step 5.
 
 ### Step 5 — Ask User: Use SpecKit?
+
+**This step is mandatory — the user must make the SpecKit choice, not you.**
 
 Present the user with a clear choice about whether to use SpecKit:
 
@@ -137,7 +183,7 @@ Wait for the user's explicit choice, then proceed accordingly:
 - **If user chooses SpecKit** → proceed to Step 6a
 - **If user declines SpecKit** → proceed to Step 6b
 
-**Do NOT make this choice on behalf of the user.** This is a human-in-the-loop decision.
+**Do NOT make this choice on behalf of the user.** This is a human-in-the-loop decision. Even if the requirement is simple and SpecKit seems like "overkill," the user decides — not you.
 
 ### Step 6a — SpecKit Pipeline (User Chose SpecKit)
 
@@ -174,7 +220,7 @@ To distinguish:
 
 **Important:** After `speckit-specify` completes, note the generated spec directory path (typically `specs/001-xxx/`). You will need it for the implementation step.
 
-If any of the 4 skills fails, report which skill failed and suggest the user re-run it individually.
+If any of the 4 skills fails, report which skill failed and suggest the user re-run it individually. Do NOT proceed past a failure.
 
 After all 4 SpecKit steps complete, proceed to Step 7a.
 
@@ -190,6 +236,8 @@ The spec directory path is the one generated by `speckit-specify` in Step 6a. Al
 
 ### Step 6b — Direct Implementation (User Skipped SpecKit)
 
+**Both sub-steps are mandatory.** Do NOT skip TDD invocation even for simple changes.
+
 Invoke the following skills in sequence:
 
 1. Invoke `superpowers:test-driven-development` via the Skill tool to establish the TDD methodology.
@@ -197,10 +245,25 @@ Invoke the following skills in sequence:
 
 **TDD Enforcement:** Each subagent dispatched during `subagent-driven-development` MUST obey `superpowers:test-driven-development` norms — write tests first, watch them fail, implement minimally, refactor, and verify 80%+ coverage.
 
+## Quick Reference — Step Mandatory Checklist
+
+| Step | Mandatory? | Skip if simple? |
+|------|-----------|-----------------|
+| Step 1 — Check Superpowers Skills | YES | NO |
+| Step 2 — Confirm User Requirements | YES | NO |
+| Step 3 — Brainstorming | YES | NO |
+| Step 4 — Write Implementation Plan | YES | NO |
+| Step 5 — Ask User: Use SpecKit? | YES | NO |
+| Step 6a/6b — SpecKit or Direct | YES (chosen path) | NO |
+| Step 7a/6b — Implement | YES (chosen path) | NO |
+
 ## Common Mistakes
 
 | Mistake | Correction |
 |---------|------------|
+| Skipping any step because the requirement seems simple | Every step is mandatory — see Anti-Skipping Rationalization Table above |
+| Combining brainstorming and writing-plans into one step | Separate phases: exploration ≠ commitment. Run both skills independently |
+| Jumping directly to implementation after Step 2 | Steps 3 and 4 are mandatory — brainstorming surfaces assumptions, writing-plans creates structure |
 | Checking SpecKit in Step 1 | SpecKit initialization is only checked in Step 6a AFTER the user chooses to use SpecKit. Do NOT check it upfront |
 | Skipping Superpowers prerequisite check | Always check Step 1 first — the workflow cannot proceed without the four Superpowers skills |
 | Asking user to confirm before writing-plans | Step 4 auto-invokes writing-plans immediately after brainstorming — no user confirmation needed |
