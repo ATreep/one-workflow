@@ -1,16 +1,12 @@
 # One Workflow
 
-A high-layer DevOps workflow for beginners, based on:
-- [Everything-Claude-Code](https://github.com/affaan-m/everything-claude-code).
-- [Superpowers](https://github.com/obra/superpowers)
-
-One Workflow allows you to build a mature software project with simply several commands.
+One Workflow allows you to build a mature software project with simply one skill.
 
 ---
 
 ## Installation
 
-### As a Plugin 
+### As a Plugin
 
 Install via Claude Code's plugin system:
 
@@ -19,14 +15,28 @@ Install via Claude Code's plugin system:
 /plugin install one-workflow
 ```
 
-After installation, invoke skills with the plugin namespace:
+After installation, invoke the skill with the plugin namespace:
 
 ```
-/one-workflow:specify
-/one-workflow:sdd
-/one-workflow:sdd-notest
-/one-workflow:sim-test
-/one-workflow:overall-refactor
+/one-workflow:brainstorm-specify-implement
+```
+
+---
+
+## Dependencies
+
+This plugin requires the following external plugins to function:
+
+| Plugin | Required Skills | Purpose |
+|--------|----------------|---------|
+| [Superpowers](https://github.com/obra/superpowers) | `brainstorming`, `writing-plans`, `test-driven-development`, `subagent-driven-development` | Brainstorming, implementation planning, TDD methodology, and parallel subagent execution |
+| [SpecKit](https://github.com/obra/speckit) | `speckit-specify`, `speckit-clarify`, `speckit-plan`, `speckit-tasks`, `speckit-implement` | Optional — double spec confirmation pipeline (only if user chooses the SpecKit path) |
+
+Install them before using this plugin:
+
+```bash
+/plugin install superpowers
+/plugin install speckit
 ```
 
 ---
@@ -35,11 +45,7 @@ After installation, invoke skills with the plugin namespace:
 
 | Skill | Description |
 |-------|-------------|
-| `/one-workflow:specify` | Generate or incrementally update project specification documents in `spec/` from source code |
-| `/one-workflow:sdd` | Spec-driven delivery: read specs, update specs first, then implement via TDD with Agent Team |
-| `/one-workflow:sdd-notest` | Same as `sdd`, but skips test writing — faster for development when tests aren't required |
-| `/one-workflow:sim-test` | End-to-end simulation testing with Playwright MCP screenshots and agent-driven fixes |
-| `/one-workflow:overall-refactor` | Full-project refactor: dead code cleanup, redesign, spec regeneration, reimplementation |
+| `/one-workflow:brainstorm-specify-implement` | Transform a rough idea or feature request into actionable implementation: validate prerequisites, brainstorm requirements, write an implementation plan, and optionally run through SpecKit for double spec confirmation before subagent-driven development with TDD |
 
 ---
 
@@ -48,17 +54,10 @@ After installation, invoke skills with the plugin namespace:
 ```
 one-workflow/
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest
+│   ├── plugin.json          # Plugin manifest
+│   └── marketplace.json     # Marketplace listing
 ├── skills/                  # Plugin skills (namespaced)
-│   ├── specify/
-│   │   └── SKILL.md
-│   ├── sdd/
-│   │   └── SKILL.md
-│   ├── sdd-notest/
-│   │   └── SKILL.md
-│   ├── sim-test/
-│   │   └── SKILL.md
-│   └── overall-refactor/
+│   └── brainstorm-specify-implement/
 │       └── SKILL.md
 └── README.md
 ```

@@ -1,5 +1,5 @@
 {
   "name": "one-workflow",
-  "description": "A high-layer DevOps workflow for beginners. Build mature software projects with simple commands: documentation generation, spec-driven development, simulation testing, and full-project refactoring.",
-  "version": "v260517-2"
+  "description": "Transform rough ideas into actionable implementation: brainstorm requirements, write plans, optionally run SpecKit for double confirmation, then execute with TDD and subagent-driven development.",
+  "version": "v260612-213020"
 }
